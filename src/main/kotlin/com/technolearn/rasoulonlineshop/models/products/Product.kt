@@ -1,11 +1,7 @@
 package com.technolearn.rasoulonlineshop.models.products
 
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import com.technolearn.rasoulonlineshop.models.products.Category
-import com.technolearn.rasoulonlineshop.models.products.Color
-import jakarta.persistence.Entity
+import com.technolearn.rasoulonlineshop.models.invoices.InvoiceItems
+import jakarta.persistence.*
 
 @Entity
 data class Product(
@@ -19,6 +15,14 @@ data class Product(
     var label: String = "",
     var size: String = "",
     var description: String = "",
-//    var category: Category? = null,
-//    var color: Color? = null
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    var category: Category? = null,
+
+    @ManyToMany
+    var colors: Set<Color>? = null,
+
+    @OneToMany(mappedBy = "product")
+    var invoiceItems: Set<InvoiceItems>? = null
 )

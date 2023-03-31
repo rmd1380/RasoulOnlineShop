@@ -1,17 +1,21 @@
 package com.technolearn.rasoulonlineshop.models.invoices
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.technolearn.rasoulonlineshop.models.products.Product
+import jakarta.persistence.*
 
 @Entity
 data class InvoiceItems(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id:Long=0,
-//    var product: Product? = null,
+    var id: Long = 0,
     var quantity: Int = 0,
     var unitPrice: Double = 0.0,
-//    var invoice: Invoice? = null
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    var product: Product? = null,
+
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
+    var invoice: Invoice? = null
 )

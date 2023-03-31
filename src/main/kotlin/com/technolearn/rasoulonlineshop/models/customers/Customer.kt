@@ -1,9 +1,6 @@
 package com.technolearn.rasoulonlineshop.models.customers
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class Customer(
@@ -12,6 +9,11 @@ data class Customer(
     var id:Long=0,
     var firstName: String = "",
     var lastName: String = "",
-    //var shippingAddress: ShippingAddress? = null,
-    var phone: Int = 0
+    var phone: Int = 0,
+
+    @OneToOne(mappedBy = "customer")
+    var user:User?=null,
+
+    @OneToMany(mappedBy = "customer")
+    var shippingAddresses: Set<ShippingAddress>? = null,
 )

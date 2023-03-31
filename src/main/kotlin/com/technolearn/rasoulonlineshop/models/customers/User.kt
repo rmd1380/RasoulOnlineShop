@@ -1,15 +1,21 @@
 package com.technolearn.rasoulonlineshop.models.customers
 
-import com.technolearn.rasoulonlineshop.models.customers.Customer
+import com.technolearn.rasoulonlineshop.models.invoices.Invoice
 import jakarta.persistence.*
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    var id:Long=0,
+    var id: Long = 0,
     var userName: String = "",
     var password: String = "",
-    //var customer: Customer? = null
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
+    var customer: Customer? = null,
+
+    @OneToMany(mappedBy = "user")
+    var invoices: Set<Invoice>? = null
 )
