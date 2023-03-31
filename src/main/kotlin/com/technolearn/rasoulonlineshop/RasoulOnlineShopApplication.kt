@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class RasoulonlineshopApplication
+class RasoulOnlineShopApplication
 
 fun main(args: Array<String>) {
-	runApplication<RasoulonlineshopApplication>(*args)
+	runApplication<RasoulOnlineShopApplication>(*args)
 }
