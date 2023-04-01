@@ -5,7 +5,7 @@ import jakarta.persistence.*
 @Entity
 data class ShippingAddress(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var name: String = "",
     var address: String = "",

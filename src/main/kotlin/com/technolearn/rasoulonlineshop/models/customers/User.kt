@@ -7,10 +7,11 @@ import jakarta.persistence.*
 @Table(name = "users")
 data class User(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var userName: String = "",
     var password: String = "",
+    var email: String = "",
 
     @OneToOne
     @JoinColumn(name = "customer_id")

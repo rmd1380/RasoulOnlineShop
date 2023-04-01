@@ -6,10 +6,11 @@ import jakarta.persistence.*
 @Entity
 data class Product(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var brand: String = "",
     var title: String = "",
+    var addDate: String = "",
     var price: Double = 0.0,
     var rate: Double = 0.0,
     var label: String = "",

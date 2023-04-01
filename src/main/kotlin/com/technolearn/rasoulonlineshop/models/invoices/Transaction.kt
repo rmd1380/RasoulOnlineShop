@@ -5,7 +5,7 @@ import jakarta.persistence.*
 @Entity
 data class Transaction(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var authority: String = "",
     var status: Int = 0,

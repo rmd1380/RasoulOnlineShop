@@ -7,7 +7,7 @@ import jakarta.persistence.*
 @Entity
 data class Invoice(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var number: Int = 0,
     var status: InvoiceStatus = InvoiceStatus.NotPayed,

@@ -6,7 +6,7 @@ import jakarta.persistence.*
 @Entity
 data class InvoiceItems(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
     var quantity: Int = 0,
     var unitPrice: Double = 0.0,
