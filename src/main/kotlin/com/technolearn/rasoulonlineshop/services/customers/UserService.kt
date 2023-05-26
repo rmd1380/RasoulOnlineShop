@@ -27,7 +27,7 @@ class UserService {
     }
 
     fun getUserByEmailAndPassword(email: String, password: String): User? {
-        return repository.findFirstByEmailAndPassWord(email, password)
+        return repository.findFirstByEmailAndPassword(email, password)
     }
 
     fun getById(id: Long): User? {

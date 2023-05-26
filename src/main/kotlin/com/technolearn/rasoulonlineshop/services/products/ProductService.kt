@@ -13,9 +13,9 @@ class ProductService {
     @Autowired
     lateinit var repository: ProductRepository
 
-    fun getAll(): List<Product> {
-        return repository.findAll()
-    }
+//    fun getAll(): List<Product> {
+//        return repository.findAll()
+//    }
 
     fun getAll(pageIndex: Int, pageSize: Int): List<Product> {
         var pageRequest = PageRequest.of(pageIndex, pageSize, Sort.by("id"))
@@ -29,11 +29,11 @@ class ProductService {
     }
 
     fun getNewProduct(): List<Product> {
-        return repository.top6ProductByAddDate()
+        return repository.findTop6ByOrderByAddDateDesc()
     }
 
     fun getPopularProduct(): List<Product> {
-        return repository.top6ProductByRate()
+        return repository.findTop6ByOrderByRate()
     }
 
     fun getAllCount(): Long {

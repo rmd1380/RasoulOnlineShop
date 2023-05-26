@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProductRepository : PagingAndSortingRepository<Product, Long>, CrudRepository<Product, Long> {
     override fun findAll(): List<Product>
-    fun top6ProductByAddDate(): List<Product>
-    fun top6ProductByRate(): List<Product>
+    fun findTop6ByOrderByAddDateDesc(): List<Product>
+
+    fun findTop6ByOrderByRate(): List<Product>
 }

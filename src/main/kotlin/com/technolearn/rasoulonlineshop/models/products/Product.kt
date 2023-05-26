@@ -10,11 +10,11 @@ data class Product(
     var id: Long = 0,
     var brand: String = "",
     var title: String = "",
+    var image:String="",
     var addDate: String = "",
     var price: Double = 0.0,
     var rate: Double = 0.0,
     var label: String = "",
-    var size: String = "",
     var description: String = "",
 
     @ManyToOne
@@ -23,6 +23,9 @@ data class Product(
 
     @ManyToMany
     var colors: Set<Color>? = null,
+
+    @ManyToMany
+    var sizes: Set<Size>? = null,
 
     @OneToMany(mappedBy = "product")
     var invoiceItems: Set<InvoiceItems>? = null
