@@ -39,4 +39,8 @@ class ProductService {
     fun getAllCount(): Long {
         return repository.count()
     }
+
+    fun getPriceById(id: Long): Double? {
+        return repository.findFirstPriceById(id)
+    }
 }

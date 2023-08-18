@@ -1,5 +1,6 @@
 package com.technolearn.rasoulonlineshop.models.invoices
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.technolearn.rasoulonlineshop.models.products.Product
 import jakarta.persistence.*
 
@@ -15,6 +16,7 @@ data class InvoiceItems(
     @JoinColumn(name = "product_id")
     var product: Product? = null,
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     var invoice: Invoice? = null

@@ -6,5 +6,6 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface CustomerRepository : PagingAndSortingRepository<Customer, Long>,CrudRepository<Customer, Long> {
+interface CustomerRepository : PagingAndSortingRepository<Customer, Long>, CrudRepository<Customer, Long> {
+    fun existsByPhone(phone: String): Boolean
 }

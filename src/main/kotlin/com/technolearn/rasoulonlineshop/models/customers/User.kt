@@ -1,5 +1,6 @@
 package com.technolearn.rasoulonlineshop.models.customers
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.technolearn.rasoulonlineshop.models.invoices.Invoice
 import jakarta.persistence.*
 
@@ -17,6 +18,7 @@ data class User(
     @JoinColumn(name = "customer_id")
     var customer: Customer? = null,
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     var invoices: Set<Invoice>? = null
 )

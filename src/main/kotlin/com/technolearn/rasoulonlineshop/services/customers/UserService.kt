@@ -1,5 +1,6 @@
 package com.technolearn.rasoulonlineshop.services.customers
 
+import com.technolearn.rasoulonlineshop.models.customers.Customer
 import com.technolearn.rasoulonlineshop.models.customers.User
 import com.technolearn.rasoulonlineshop.repositories.customers.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Service
 class UserService {
 
     @Autowired
-    lateinit var repository: UserRepository
+    private lateinit var repository: UserRepository
+
+    @Autowired
+    lateinit var customerService: CustomerService
 
     //CRUD
     fun insert(data: User): User {
@@ -23,10 +27,14 @@ class UserService {
         if (data.password.isEmpty()) {
             throw Exception("Please Enter Password")
         }
+        customerService.insert(data.customer ?: Customer())
         return repository.save(data)
     }
 
     fun getUserByEmailAndPassword(email: String, password: String): User? {
+        if (email.isEmpty() || password.isEmpty()) {
+            throw Exception("Please Enter Email And Password")
+        }
         return repository.findFirstByEmailAndPassword(email, password)
     }
 
@@ -37,10 +45,35 @@ class UserService {
     }
 
     fun update(data: User): User? {
+        val oldCustomer = customerService.getById(data.customer!!.id) ?: return null
+        oldCustomer.firstName = data.customer!!.firstName
+        oldCustomer.lastName = data.customer!!.lastName
+        oldCustomer.phone = data.customer!!.phone
+        oldCustomer.addressName = data.customer!!.addressName
+        oldCustomer.address = data.customer!!.address
+        oldCustomer.city = data.customer!!.city
+        oldCustomer.province = data.customer!!.province
+        oldCustomer.postalCode = data.customer!!.postalCode
+        oldCustomer.country = data.customer!!.country
+        customerService.update(oldCustomer)
+        data.password = ""
+        return data
+    }
+
+    fun changePassword(data: User, oldPassword: String, repeatPassword: String): User? {
+        if (data.password != repeatPassword)
+            throw Exception("Password not matched to repeat password")
+        //TODO: check password strength
         val oldData = getById(data.id) ?: return null
-        oldData.email = data.email
+        if (oldData.password != oldPassword)
+            throw Exception("Invalid current password")
+        if(oldData.password==data.password){
+            throw Exception("Your new password is same as current password")
+        }
         oldData.password = data.password
-        return repository.save(oldData)
+        val savedData = repository.save(oldData)
+        savedData.password = ""
+        return savedData
     }
 
 }
