@@ -6,6 +6,9 @@ import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface UserRepository : PagingAndSortingRepository<User, Long>,CrudRepository<User, Long> {
+interface UserRepository : PagingAndSortingRepository<User, Long>, CrudRepository<User, Long> {
     fun findFirstByEmailAndPassword(email: String, password: String): User?
+    fun findFirstByEmail(email: String): User?
+    fun existsByEmail(email: String): Boolean
+    fun existsByUserName(userName: String): Boolean
 }

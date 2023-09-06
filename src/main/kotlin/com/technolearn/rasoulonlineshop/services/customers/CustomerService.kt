@@ -14,19 +14,6 @@ class CustomerService {
 
     //CRUD
     fun insert(data: Customer): Customer {
-        if (data.firstName.isEmpty()) {
-            throw Exception("Please Enter FirstName")
-        }
-        if (data.lastName.isEmpty()) {
-            throw Exception("Please Enter LastName")
-        }
-        if (data.phone.isEmpty()) {
-            throw Exception("Please Enter PhoneNumber")
-        }
-        val phoneExists = repository.existsByPhone(data.phone)
-        if (phoneExists) {
-            throw Exception("Phone number already exists")
-        }
         return repository.save(data)
 
     }
