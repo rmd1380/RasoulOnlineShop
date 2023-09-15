@@ -2,9 +2,10 @@ package com.technolearn.rasoulonlineshop.vm
 
 import com.technolearn.rasoulonlineshop.models.customers.Customer
 import com.technolearn.rasoulonlineshop.models.customers.User
+import io.swagger.v3.oas.annotations.Hidden
 
 data class UserViewModel(
-        var id: Long,
+        var id: Long=0,
         var username: String = "",
         var oldPassword: String = "",
         var password: String = "",

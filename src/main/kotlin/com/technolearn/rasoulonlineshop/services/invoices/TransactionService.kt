@@ -24,7 +24,7 @@ class TransactionService {
     private fun update(data: Transaction): Transaction? {
         val oldData = getById(data.id) ?: return null
         oldData.refId = data.refId
-        oldData.status = data.status
+        oldData.code = data.code
         return repository.save(oldData)
     }
 

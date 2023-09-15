@@ -3,6 +3,7 @@ package com.technolearn.rasoulonlineshop.models.customers
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.technolearn.rasoulonlineshop.models.invoices.Invoice
 import jakarta.persistence.*
+import jakarta.validation.constraints.Email
 
 @Entity
 @Table(name = "users")

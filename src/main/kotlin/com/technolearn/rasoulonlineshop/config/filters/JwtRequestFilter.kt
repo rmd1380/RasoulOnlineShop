@@ -49,11 +49,11 @@ class JwtRequestFilter : Filter {
                 return
             }
             val requestTokenHeader = request.getHeader("Authorization")
-            if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer "))
+            if (requestTokenHeader == null || !requestTokenHeader.lowercase(Locale.getDefault()).startsWith("Bearer"))
                 throw JwtTokenException("request token header does not set")
             val token = requestTokenHeader.substring(7)
-            val username: String = jwtTokenUtil.getEmailFromToken(token)
-            val userVM = UserViewModel(userService.getUserByEmail(username)!!)
+            val currentUser: String = jwtTokenUtil.getEmailFromToken(token)
+            val userVM = UserViewModel()
             if (!jwtTokenUtil.validateToken(token, userVM))
                 throw JwtTokenException("invalid token")
             chain!!.doFilter(request, response)

@@ -20,7 +20,7 @@ class ProductController {
     @Autowired
     private lateinit var service: ProductService
 
-    //http://localhost:8080/api/product
+    //https://localhost:8080/api/product?pageIndex=1&pageSize=10
     @GetMapping("")
     fun getAll(@RequestParam pageIndex: Int, @RequestParam pageSize: Int): ServiceResponse<Product> {
         return try {

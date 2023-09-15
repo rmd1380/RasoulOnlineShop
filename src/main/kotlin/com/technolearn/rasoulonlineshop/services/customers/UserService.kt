@@ -3,8 +3,11 @@ package com.technolearn.rasoulonlineshop.services.customers
 import com.technolearn.rasoulonlineshop.models.customers.Customer
 import com.technolearn.rasoulonlineshop.models.customers.User
 import com.technolearn.rasoulonlineshop.repositories.customers.UserRepository
+import com.technolearn.rasoulonlineshop.utils.SecurityUtil
+import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.validation.annotation.Validated
 
 
 @Service
@@ -24,31 +27,41 @@ class UserService {
         if (data.email.isEmpty()) {
             throw Exception("Please Enter Email")
         }
+        if(!SecurityUtil.isEmailValid(data.email)){
+            throw Exception("Invalid Email Format")
+        }
         if (data.password.isEmpty()) {
             throw Exception("Please Enter Password")
         }
-        val emailExists = repository.existsByEmail(data.email)
-        if (emailExists) {
+        if (data.password.length < 8) {
+            throw Exception("Password length should be at least 8 character")
+        }
+        val isEmailExists = repository.existsByEmail(data.email)
+        if (isEmailExists) {
             throw Exception("Email already exists")
         }
-        val userNameExists = repository.existsByUserName(data.userName)
-        if (userNameExists) {
+        val isUserNameExists = repository.existsByUserName(data.userName)
+        if (isUserNameExists) {
             throw Exception("UserName already exists")
         }
-        customerService.insert(data.customer ?: Customer())
-        return repository.save(data)
+        data.password = SecurityUtil.encryptSHA256(data.password)
+        customerService.insert(data.customer!!)
+        val saveData = repository.save(data)
+        saveData.password = ""
+        return saveData
     }
 
     fun getUserByEmailAndPassword(email: String, password: String): User? {
         if (email.isEmpty() || password.isEmpty()) {
             throw Exception("Please Enter Email And Password")
         }
-        return repository.findFirstByEmailAndPassword(email, password)
+        val pass = SecurityUtil.encryptSHA256(password)
+        return repository.findFirstByEmailAndPassword(email, pass)
     }
 
     fun getUserByEmail(email: String): User? {
         if (email.isEmpty()) {
-            throw Exception("Please Enter Email And Password")
+            throw Exception("Please Enter Email")
         }
         return repository.findFirstByEmail(email)
     }
@@ -84,19 +97,19 @@ class UserService {
         val user = repository.findFirstByEmail(currentUser)
         if (user == null || user.id != data.id) {
             throw Exception("You don't have permission to change password")
-
         }
         if (data.password != repeatPassword)
             throw Exception("Password not matched to repeat password")
-        //TODO: check password strength
-        val oldData = getById(data.id) ?: return null
-        if (oldData.password != oldPassword)
+        if (data.password.length < 8) {
+            throw Exception("Password length should be at least 8 character")
+        }
+        if (user.password != SecurityUtil.encryptSHA256(oldPassword))
             throw Exception("Invalid current password")
-        if (oldData.password == data.password) {
+        if (user.password == data.password) {
             throw Exception("Your new password is same as current password")
         }
-        oldData.password = data.password
-        val savedData = repository.save(oldData)
+        user.password = SecurityUtil.encryptSHA256(data.password)
+        val savedData = repository.save(user)
         savedData.password = ""
         return savedData
     }

@@ -1,0 +1,15 @@
+package com.technolearn.rasoulonlineshop.models.req
+
+import com.technolearn.rasoulonlineshop.models.customers.User
+import io.swagger.v3.oas.annotations.Hidden
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+
+data class CreateUserRequest(
+        val username: String,
+        val password: String,
+        val email: String
+)
+
