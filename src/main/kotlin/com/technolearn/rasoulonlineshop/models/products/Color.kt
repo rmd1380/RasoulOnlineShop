@@ -10,6 +10,6 @@ data class Color(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0,
-    var title: String = "",
-    var hexValue: String = "",
+    var title: String? = "",
+    var hexValue: String? = "",
 )

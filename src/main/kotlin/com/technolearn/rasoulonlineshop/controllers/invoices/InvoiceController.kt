@@ -2,8 +2,9 @@ package com.technolearn.rasoulonlineshop.controllers.invoices
 
 import com.technolearn.rasoulonlineshop.config.JwtTokenUtils
 import com.technolearn.rasoulonlineshop.models.invoices.Invoice
+import com.technolearn.rasoulonlineshop.models.req.InvoiceRequest
 import com.technolearn.rasoulonlineshop.services.invoices.InvoiceService
-import com.technolearn.rasoulonlineshop.utils.NotFoundException
+import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
 import com.technolearn.rasoulonlineshop.utils.ServiceResponse
 import com.technolearn.rasoulonlineshop.utils.UserUtil.Companion.getCurrentUser
 import jakarta.servlet.http.HttpServletRequest
@@ -29,7 +30,7 @@ class InvoiceController {
         return try {
             val currentUser = getCurrentUser(jwtUtil, request)
             val data = service.getById(id,currentUser) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {
@@ -44,12 +45,11 @@ class InvoiceController {
             @RequestParam pageSize: Int,
             @RequestParam pageIndex: Int,
             request: HttpServletRequest
-    ): ServiceResponse<Invoice>? {
+    ): ServiceResponse<List<Invoice>>? {
 
         return try {
             val currentUser = getCurrentUser(jwtUtil, request)
             val data = service.getAllByUserId(userId, pageIndex, pageSize, currentUser)
-                    ?: throw NotFoundException("Not found")
             ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
@@ -60,12 +60,16 @@ class InvoiceController {
 
     @PostMapping("")
     fun addInvoice(
-            @RequestBody invoice: Invoice,
+            @RequestBody invoice: InvoiceRequest,
             request: HttpServletRequest): ServiceResponse<Invoice> {
         return try {
+            val finalInvoice=Invoice(
+                    user = invoice.user,
+                    invoiceItems = invoice.invoiceItems
+            )
             val currentUser = getCurrentUser(jwtUtil, request)
-            val data = service.insert(invoice, currentUser) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            val data = service.insert(finalInvoice, currentUser)
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {

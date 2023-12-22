@@ -2,7 +2,7 @@ package com.technolearn.rasoulonlineshop.controllers.products
 
 import com.technolearn.rasoulonlineshop.models.products.Size
 import com.technolearn.rasoulonlineshop.services.products.SizeService
-import com.technolearn.rasoulonlineshop.utils.NotFoundException
+import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
 import com.technolearn.rasoulonlineshop.utils.ServiceResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -21,7 +21,7 @@ class SizeController {
 
     //http://localhost:8080/api/size
     @GetMapping("")
-    fun getAll(): ServiceResponse<Size> {
+    fun getAll(): ServiceResponse<List<Size>> {
         return try {
             ServiceResponse(service.getAll(), HttpStatus.OK.value())
         } catch (e: NotFoundException) {
@@ -36,7 +36,7 @@ class SizeController {
 
         return try {
             val data = service.getById(id) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {

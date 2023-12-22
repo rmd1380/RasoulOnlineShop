@@ -1,6 +1,7 @@
 package com.technolearn.rasoulonlineshop.utils
 
 import com.technolearn.rasoulonlineshop.config.JwtTokenUtils
+import com.technolearn.rasoulonlineshop.utils.exceptions.JwtTokenException
 import jakarta.servlet.http.HttpServletRequest
 import java.util.*
 

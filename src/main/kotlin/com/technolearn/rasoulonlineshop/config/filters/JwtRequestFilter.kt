@@ -2,7 +2,7 @@ package com.technolearn.rasoulonlineshop.config.filters
 
 import com.technolearn.rasoulonlineshop.config.JwtTokenUtils
 import com.technolearn.rasoulonlineshop.services.customers.UserService
-import com.technolearn.rasoulonlineshop.utils.JwtTokenException
+import com.technolearn.rasoulonlineshop.utils.exceptions.JwtTokenException
 import com.technolearn.rasoulonlineshop.vm.UserViewModel
 import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.Filter
@@ -32,6 +32,9 @@ class JwtRequestFilter : Filter {
     init {
         excludeUrls.add("/api/user/login")
         excludeUrls.add("/api/user/register")
+        excludeUrls.add("/api/txn/gotoPayment")
+        excludeUrls.add("/api/txn/verify")
+        excludeUrls.add("/api/txn/sendPostRequest")
 
         excludeContainsUrls.add("/api/slider")
         excludeContainsUrls.add("/api/category")
@@ -49,11 +52,11 @@ class JwtRequestFilter : Filter {
                 return
             }
             val requestTokenHeader = request.getHeader("Authorization")
-            if (requestTokenHeader == null || !requestTokenHeader.lowercase(Locale.getDefault()).startsWith("Bearer"))
+            if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer "))
                 throw JwtTokenException("request token header does not set")
             val token = requestTokenHeader.substring(7)
-            val currentUser: String = jwtTokenUtil.getEmailFromToken(token)
-            val userVM = UserViewModel()
+            val username: String = jwtTokenUtil.getEmailFromToken(token)
+            val userVM = UserViewModel(userService.getUserByEmail(username)!!)
             if (!jwtTokenUtil.validateToken(token, userVM))
                 throw JwtTokenException("invalid token")
             chain!!.doFilter(request, response)

@@ -79,15 +79,34 @@ class UserService {
         }
 
         val oldCustomer = customerService.getById(data.customer!!.id) ?: return null
-        oldCustomer.firstName = data.customer!!.firstName
-        oldCustomer.lastName = data.customer!!.lastName
-        oldCustomer.phone = data.customer!!.phone
-        oldCustomer.addressName = data.customer!!.addressName
-        oldCustomer.address = data.customer!!.address
-        oldCustomer.city = data.customer!!.city
-        oldCustomer.province = data.customer!!.province
-        oldCustomer.postalCode = data.customer!!.postalCode
-        oldCustomer.country = data.customer!!.country
+
+        if(data.customer!!.firstName.isNotEmpty()){
+            oldCustomer.firstName = data.customer!!.firstName
+        }
+        if(data.customer!!.lastName.isNotEmpty()){
+            oldCustomer.lastName = data.customer!!.lastName
+        }
+        if(data.customer!!.phone.isNotEmpty()){
+            oldCustomer.phone = data.customer!!.phone
+        }
+        if(data.customer!!.addressName.isNotEmpty()){
+            oldCustomer.addressName = data.customer!!.addressName
+        }
+        if(data.customer!!.address.isNotEmpty()){
+            oldCustomer.address = data.customer!!.address
+        }
+        if(data.customer!!.city.isNotEmpty()){
+            oldCustomer.city = data.customer!!.city
+        }
+        if(data.customer!!.province.isNotEmpty()){
+            oldCustomer.province = data.customer!!.province
+        }
+        if(data.customer!!.postalCode.isNotEmpty()){
+            oldCustomer.postalCode = data.customer!!.postalCode
+        }
+        if(data.customer!!.country.isNotEmpty()){
+            oldCustomer.country = data.customer!!.country
+        }
         customerService.update(oldCustomer)
         data.password = ""
         return data
@@ -112,6 +131,10 @@ class UserService {
         val savedData = repository.save(user)
         savedData.password = ""
         return savedData
+    }
+
+    fun isUserExist(id:Long):Boolean{
+        return repository.existsById(id)
     }
 
 }

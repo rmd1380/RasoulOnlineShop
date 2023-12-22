@@ -2,7 +2,7 @@ package com.technolearn.rasoulonlineshop.controllers.products
 
 import com.technolearn.rasoulonlineshop.models.products.Category
 import com.technolearn.rasoulonlineshop.services.products.CategoryService
-import com.technolearn.rasoulonlineshop.utils.NotFoundException
+import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
 import com.technolearn.rasoulonlineshop.utils.ServiceResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -21,7 +21,7 @@ class CategoryController {
 
     //http://localhost:8080/api/category
     @GetMapping("")
-    fun getAll(): ServiceResponse<Category> {
+    fun getAll(): ServiceResponse<List<Category>> {
         return try {
             ServiceResponse(service.getAll(), HttpStatus.OK.value())
         } catch (e: NotFoundException) {
@@ -36,7 +36,7 @@ class CategoryController {
 
         return try {
             val data = service.getById(id) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {

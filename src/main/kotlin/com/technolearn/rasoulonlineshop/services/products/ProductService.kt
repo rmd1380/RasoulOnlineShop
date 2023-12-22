@@ -43,4 +43,12 @@ class ProductService {
     fun getPriceById(id: Long): Double? {
         return repository.findFirstPriceById(id)
     }
+
+    fun getAllByIdList(idList: List<Long>): List<Product> {
+        return repository.findAllByIdList(idList)
+    }
+    fun getByCategoryId(categoryId:Long,pageIndex: Int, pageSize: Int): List<Product> {
+        var pageRequest = PageRequest.of(pageIndex, pageSize, Sort.by("id"))
+        return repository.findAllByCategoryId(categoryId).toList()
+    }
 }

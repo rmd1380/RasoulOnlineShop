@@ -2,7 +2,7 @@ package com.technolearn.rasoulonlineshop.controllers.products
 
 import com.technolearn.rasoulonlineshop.models.products.Product
 import com.technolearn.rasoulonlineshop.services.products.ProductService
-import com.technolearn.rasoulonlineshop.utils.NotFoundException
+import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
 import com.technolearn.rasoulonlineshop.utils.ServiceResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -20,9 +20,9 @@ class ProductController {
     @Autowired
     private lateinit var service: ProductService
 
-    //https://localhost:8080/api/product?pageIndex=1&pageSize=10
+    //https://localhost:8080/api/product?pageIndex=0&pageSize=10
     @GetMapping("")
-    fun getAll(@RequestParam pageIndex: Int, @RequestParam pageSize: Int): ServiceResponse<Product> {
+    fun getAll(@RequestParam pageIndex: Int, @RequestParam pageSize: Int): ServiceResponse<List<Product>> {
         return try {
             ServiceResponse(service.getAll(pageIndex, pageSize), HttpStatus.OK.value())
         } catch (e: NotFoundException) {
@@ -33,7 +33,7 @@ class ProductController {
     }
 
     @GetMapping("/new")
-    fun getNewProduct(): ServiceResponse<Product> {
+    fun getNewProduct(): ServiceResponse<List<Product>> {
         return try {
             ServiceResponse(service.getNewProduct(), HttpStatus.OK.value())
         } catch (e: NotFoundException) {
@@ -44,7 +44,7 @@ class ProductController {
     }
 
     @GetMapping("/popular")
-    fun getPopularProduct(): ServiceResponse<Product> {
+    fun getPopularProduct(): ServiceResponse<List<Product>> {
         return try {
             ServiceResponse(service.getPopularProduct(), HttpStatus.OK.value())
         } catch (e: NotFoundException) {
@@ -56,14 +56,23 @@ class ProductController {
 
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ServiceResponse<Product>? {
-
         return try {
             val data = service.getById(id) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {
             ServiceResponse(status = HttpStatus.INTERNAL_SERVER_ERROR.value(), message = e.message!!)
+        }
+    }
+    @GetMapping("cat/{id}")
+    fun getByCategoryId(@PathVariable id: Long, @RequestParam pageIndex: Int, @RequestParam pageSize: Int): ServiceResponse<List<Product>> {
+        return try {
+            ServiceResponse(service.getByCategoryId(id,pageIndex, pageSize), HttpStatus.OK.value())
+        } catch (e: NotFoundException) {
+            ServiceResponse(status = HttpStatus.INTERNAL_SERVER_ERROR.value(), message = "Not Found")
+        } catch (e: Exception) {
+            ServiceResponse(status = HttpStatus.INTERNAL_SERVER_ERROR.value(), message = "INTERNAL_SERVER_ERROR")
         }
     }
 

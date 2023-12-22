@@ -6,7 +6,7 @@ import com.technolearn.rasoulonlineshop.models.req.CreateUserRequest
 import com.technolearn.rasoulonlineshop.models.req.LoginUserRequest
 import com.technolearn.rasoulonlineshop.models.req.UpdateUserInfoRequest
 import com.technolearn.rasoulonlineshop.services.customers.UserService
-import com.technolearn.rasoulonlineshop.utils.NotFoundException
+import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
 import com.technolearn.rasoulonlineshop.utils.ServiceResponse
 import com.technolearn.rasoulonlineshop.utils.UserUtil.Companion.getCurrentUser
 import com.technolearn.rasoulonlineshop.vm.UserViewModel
@@ -36,7 +36,7 @@ class UserController {
                     ?: throw NotFoundException("Not found")
             val vm = UserViewModel(data)
             vm.token = jwtUtil.generateToken(vm)!!
-            ServiceResponse(listOf(vm), HttpStatus.OK.value())
+            ServiceResponse(vm, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {
@@ -50,7 +50,7 @@ class UserController {
         return try {
             val currentUser = getCurrentUser(jwtUtil, request)
             val data = service.getUserByEmail(currentUser) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {
@@ -67,8 +67,8 @@ class UserController {
                     password = request.password,
                     email = request.email
             )
-            val data = service.insert(user.convertToUser()) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            val data = service.insert(user.convertToUser())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {
@@ -95,7 +95,7 @@ class UserController {
                     customerId = userReq.id
             )
             val data = service.update(user.convertToUser(), currentUser) ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {
@@ -110,7 +110,7 @@ class UserController {
             val currentUser = getCurrentUser(jwtUtil, request)
             val data = service.changePassword(user.convertToUser(), user.oldPassword, user.repeatPassword, currentUser)
                     ?: throw NotFoundException("Not found")
-            ServiceResponse(listOf(data), HttpStatus.OK.value())
+            ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
         } catch (e: Exception) {

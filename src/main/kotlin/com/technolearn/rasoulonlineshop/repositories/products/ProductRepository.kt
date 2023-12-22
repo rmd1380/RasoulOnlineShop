@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.PagingAndSortingRepository
 import org.springframework.stereotype.Repository
+import org.springframework.data.domain.Pageable
 
 @Repository
 interface ProductRepository : PagingAndSortingRepository<Product, Long>, CrudRepository<Product, Long> {
@@ -15,4 +16,10 @@ interface ProductRepository : PagingAndSortingRepository<Product, Long>, CrudRep
 
     @Query("select price from Product where id = :id")
     fun findFirstPriceById(id: Long): Double?
+
+    @Query("from Product where id in :idList")
+    fun findAllByIdList(idList:List<Long>):List<Product>
+
+    @Query("from Product where category.id =:categoryId")
+    fun findAllByCategoryId(categoryId:Long):List<Product>
 }

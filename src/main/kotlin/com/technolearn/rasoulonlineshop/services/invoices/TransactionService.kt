@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service
 class TransactionService {
 
     @Autowired
-    lateinit var repository: TransactionRepository
+    private lateinit var repository: TransactionRepository
 
-    private fun insert(data: Transaction): Transaction {
+    fun insert(data: Transaction): Transaction {
         return repository.save(data)
     }
 
@@ -21,11 +21,15 @@ class TransactionService {
         return data.get()
     }
 
-    private fun update(data: Transaction): Transaction? {
-        val oldData = getById(data.id) ?: return null
-        oldData.refId = data.refId
-        oldData.code = data.code
-        return repository.save(oldData)
-    }
+//    fun getByTransId(transId: String): Transaction? {
+//        return repository.findByTransId(transId)
+//    }
+//
+//    fun update(data: Transaction): Transaction? {
+//        val oldData = getById(data.id) ?: return null
+//        oldData.status = data.status
+//        oldData.token = data.token
+//        return repository.save(oldData)
+//    }
 
 }

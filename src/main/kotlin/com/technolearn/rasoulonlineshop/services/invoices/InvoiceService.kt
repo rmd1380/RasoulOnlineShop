@@ -44,11 +44,11 @@ class InvoiceService {
     fun insert(data: Invoice, currentUser: String): Invoice {
         if (data.invoiceItems == null || data.invoiceItems!!.isEmpty())
             throw Exception("InvoiceItems are empty")
-        if (data.user == null || data.user!!.id == null || data.user!!.id <= 0)
+        if (data.user == null || data.user!!.id <= 0)
             throw Exception("Invalid user id")
 
         val user = userService.getUserByEmail(currentUser)
-        if (user == null || user.id != data.id) {
+        if (user == null || user.id != data.user!!.id) {
             throw Exception("You don't have permission to access this data")
         }
 
