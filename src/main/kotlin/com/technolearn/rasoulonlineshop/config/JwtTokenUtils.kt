@@ -12,8 +12,9 @@ import java.util.function.Function
 
 @Component
 class JwtTokenUtils : Serializable {
+    private final val JWT_TOKEN_VALIDITY_IN_DAYS = 100
+    val JWT_TOKEN_VALIDITY = JWT_TOKEN_VALIDITY_IN_DAYS * (24 * 60 * 60).toLong()
 
-    val JWT_TOKEN_VALIDITY = (5 * 60 * 60).toLong()
 
     @Value("\${jwt.secret}")
     private val secret: String? = null
