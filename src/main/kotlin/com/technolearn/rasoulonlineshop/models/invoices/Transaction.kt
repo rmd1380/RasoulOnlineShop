@@ -12,8 +12,8 @@ data class Transaction(
     var token: String = "",
 
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "invoice_id")
-    var invoice: Invoice? = null
+//    @JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "invoice_id")
+//    var invoice: Invoice? = null
 )

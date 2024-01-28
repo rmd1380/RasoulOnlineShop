@@ -44,6 +44,9 @@ class ProductService {
         return repository.findFirstPriceById(id)
     }
 
+    fun getDiscountById(id: Long): Double? {
+        return repository.findFirstDiscountById(id)
+    }
     fun getAllByIdList(idList: List<Long>): List<Product> {
         return repository.findAllByIdList(idList)
     }

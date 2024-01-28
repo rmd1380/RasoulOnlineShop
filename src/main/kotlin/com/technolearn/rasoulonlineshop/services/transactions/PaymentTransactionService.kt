@@ -151,14 +151,14 @@ class PaymentTransactionService {
         return productService.getAllByIdList(idList)
     }
 
-    private fun createInvoice(user: User?, data: PaymentViewModel, currentUser: String): Invoice {
-        val invoice = Invoice(
-                user = user,
-                invoiceItems = data.invoiceItems
-        )
-        invoiceService.insert(invoice, currentUser)
-        return invoice
-    }
+//    private fun createInvoice(user: User?, data: PaymentViewModel, currentUser: String): Invoice {
+//        val invoice = Invoice(
+//                user = user,
+//                invoiceItems = data.invoiceItems
+//        )
+//        invoiceService.insert(invoice, currentUser)
+//        return invoice
+//    }
 
     private fun registerUser(data: PaymentViewModel): User? {
         return if (data.user.id <= 0) {

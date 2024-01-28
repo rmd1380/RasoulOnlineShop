@@ -9,7 +9,7 @@ data class Invoice(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         var id: Long = 0,
-        var status: InvoiceStatus = InvoiceStatus.NotPayed,
+        var status: InvoiceStatus = InvoiceStatus.Cancelled,
         var addDate: String = "",
         var paymentDate: String = "",
 
@@ -19,8 +19,8 @@ data class Invoice(
         var user: User? = null,
 
         @OneToMany(mappedBy = "invoice")
-        var invoiceItems: List<InvoiceItems>? = null,
+        var invoiceItems: Set<InvoiceItems>? = null,
 
-        @OneToMany(mappedBy = "invoice")
-        var transactions: Set<Transaction>? = null
+//        @OneToMany(mappedBy = "invoice")
+//        var transactions: Set<Transaction>? = null
 )

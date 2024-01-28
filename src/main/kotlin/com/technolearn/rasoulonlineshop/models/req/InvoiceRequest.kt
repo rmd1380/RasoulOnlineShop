@@ -10,6 +10,6 @@ import jakarta.persistence.Id
 
 data class InvoiceRequest(
         var user: User? = null,
-        var invoiceItems: List<InvoiceItems>? = null,
+        var invoiceItems: Set<InvoiceItems>? = null,
 )
 

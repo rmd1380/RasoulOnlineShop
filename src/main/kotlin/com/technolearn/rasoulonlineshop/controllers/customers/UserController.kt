@@ -45,11 +45,11 @@ class UserController {
     }
 
 
-    @GetMapping("")
-    fun getUser(request: HttpServletRequest): ServiceResponse<User> {
+    @GetMapping("/{id}")
+    fun getUserById(@PathVariable id:Long, request: HttpServletRequest): ServiceResponse<User> {
         return try {
             val currentUser = getCurrentUser(jwtUtil, request)
-            val data = service.getUserByEmail(currentUser) ?: throw NotFoundException("Not found")
+            val data = service.getById(id) ?: throw NotFoundException("Not found")
             ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)

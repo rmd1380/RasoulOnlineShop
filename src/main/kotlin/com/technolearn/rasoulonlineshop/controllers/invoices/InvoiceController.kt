@@ -1,12 +1,15 @@
 package com.technolearn.rasoulonlineshop.controllers.invoices
 
 import com.technolearn.rasoulonlineshop.config.JwtTokenUtils
+import com.technolearn.rasoulonlineshop.models.enums.InvoiceStatus
 import com.technolearn.rasoulonlineshop.models.invoices.Invoice
 import com.technolearn.rasoulonlineshop.models.req.InvoiceRequest
+import com.technolearn.rasoulonlineshop.repositories.invoices.InvoiceItemsRepository
 import com.technolearn.rasoulonlineshop.services.invoices.InvoiceService
-import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
+import com.technolearn.rasoulonlineshop.services.products.ProductService
 import com.technolearn.rasoulonlineshop.utils.ServiceResponse
 import com.technolearn.rasoulonlineshop.utils.UserUtil.Companion.getCurrentUser
+import com.technolearn.rasoulonlineshop.utils.exceptions.NotFoundException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -41,15 +44,12 @@ class InvoiceController {
 
     @GetMapping("/user/{userId}")
     fun getAllByUserId(
-            @PathVariable userId: Long,
-            @RequestParam pageSize: Int,
-            @RequestParam pageIndex: Int,
-            request: HttpServletRequest
+        @PathVariable userId: Long,
+        request: HttpServletRequest
     ): ServiceResponse<List<Invoice>>? {
-
         return try {
             val currentUser = getCurrentUser(jwtUtil, request)
-            val data = service.getAllByUserId(userId, pageIndex, pageSize, currentUser)
+            val data = service.getAllByUserId(userId, currentUser)
             ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)
@@ -58,17 +58,25 @@ class InvoiceController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/{status}")
     fun addInvoice(
-            @RequestBody invoice: InvoiceRequest,
-            request: HttpServletRequest): ServiceResponse<Invoice> {
+        @PathVariable status: Int,
+        @RequestBody invoice: InvoiceRequest,
+        request: HttpServletRequest
+    ): ServiceResponse<Invoice> {
         return try {
-            val finalInvoice=Invoice(
-                    user = invoice.user,
-                    invoiceItems = invoice.invoiceItems
+            val finalInvoice = Invoice(
+                user = invoice.user,
+                invoiceItems = invoice.invoiceItems
             )
+            val finalStatus:InvoiceStatus= when (status) {
+                0 -> InvoiceStatus.Cancelled
+                1 -> InvoiceStatus.Processing
+                2 -> InvoiceStatus.Delivered
+                else -> {throw Exception("Enter Valid Payment Status")}
+            }
             val currentUser = getCurrentUser(jwtUtil, request)
-            val data = service.insert(finalInvoice, currentUser)
+            val data = service.insert(finalInvoice,finalStatus, currentUser)
             ServiceResponse(data, HttpStatus.OK.value())
         } catch (e: NotFoundException) {
             ServiceResponse(status = HttpStatus.NOT_FOUND.value(), message = e.message!!)

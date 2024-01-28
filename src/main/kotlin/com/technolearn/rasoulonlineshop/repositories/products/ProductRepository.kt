@@ -17,6 +17,9 @@ interface ProductRepository : PagingAndSortingRepository<Product, Long>, CrudRep
     @Query("select price from Product where id = :id")
     fun findFirstPriceById(id: Long): Double?
 
+    @Query("select hasDiscount from Product where id = :id")
+    fun findFirstDiscountById(id: Long): Double?
+
     @Query("from Product where id in :idList")
     fun findAllByIdList(idList:List<Long>):List<Product>
 

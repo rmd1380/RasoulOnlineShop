@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository
 interface InvoiceItemsRepository : PagingAndSortingRepository<InvoiceItems, Long>,CrudRepository<InvoiceItems, Long> {
 
     @Query("from InvoiceItems where invoice.id = :invoiceId")
-    fun findAllByUserId(invoiceId: Int): List<InvoiceItems>
+    fun findAllByInvoiceId(invoiceId: Long): Set<InvoiceItems>
 }

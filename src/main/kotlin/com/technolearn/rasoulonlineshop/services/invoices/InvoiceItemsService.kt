@@ -5,6 +5,7 @@ import com.technolearn.rasoulonlineshop.repositories.invoices.InvoiceItemsReposi
 import com.technolearn.rasoulonlineshop.services.products.ProductService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.math.roundToInt
 
 @Service
 class InvoiceItemsService {
@@ -20,8 +21,8 @@ class InvoiceItemsService {
         return data.get()
     }
 
-    fun getAllByInvoiceId(invoiceId: Int): List<InvoiceItems> {
-        return repository.findAllByUserId(invoiceId)
+    fun getAllByInvoiceId(invoiceId: Long): Set<InvoiceItems> {
+        return repository.findAllByInvoiceId(invoiceId)
     }
 
     fun addItem(invoiceItem: InvoiceItems): InvoiceItems {
@@ -33,7 +34,12 @@ class InvoiceItemsService {
             throw Exception("Invalid Product")
 
         val productPrice = productService.getPriceById(invoiceItem.product!!.id)
+        val productDiscount = productService.getDiscountById(invoiceItem.product!!.id)
+        val discountAmount = (productPrice?.times(productDiscount ?: 0.0))?.div(100.0)
+        val finalPrice = productPrice?.minus(discountAmount ?: 0.0)
         invoiceItem.unitPrice = productPrice ?: 0.0
+        invoiceItem.finalPriceAfterDiscount = finalPrice?.roundToInt() ?: 0
+        invoiceItem.finalPriceForPay = finalPrice?.roundToInt()?.times(invoiceItem.quantity) ?: 0
         return repository.save(invoiceItem)
     }
 }
